@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RecyclerView</string>
+    <string name="recyclerview_example">RecyclerView Example</string>
+    <string name="internet_error">Internet connection not available.</string>
+    <string name="alert">Alert!</string>
+    <string name="data_not_fount">Sorry data not found.</string>
+</resources>
