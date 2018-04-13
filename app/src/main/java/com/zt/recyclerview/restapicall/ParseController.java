@@ -188,27 +188,19 @@ public class ParseController {
     public String callPOSTAPI() {
         try {
             Request.Builder builder = new Request.Builder();
-
             MultipartBody.Builder multipartBody = new MultipartBody.Builder();
             multipartBody.setType(MultipartBody.FORM);
-
-
-            Log.d("STRURL", strURL);
+            Log.e("STRURL", strURL);
             for (String key : map.keySet()) {
-                Log.d("Params", key + " = " + map.get(key));
+                Log.e("Params", key + " = " + map.get(key));
                 multipartBody.addFormDataPart(key, map.get(key));
             }
-
-
             builder.url(strURL);
             builder.post(multipartBody.build());
             Request request = builder.build();
-
-
             Response response = configureHttpClient().newCall(request).execute();
             statusCode = response.code();
             return response.body().string();
-
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
             return strInternet;
@@ -229,50 +221,35 @@ public class ParseController {
 
     public static String fileVideoAndImageUploading(Map<String, String> hashMap, int k) {
         try {
-
             Request.Builder builder = new Request.Builder();
             MultipartBody.Builder multipartBody = new MultipartBody.Builder();
             multipartBody.setType(MultipartBody.FORM);
-
             if (hashMap.containsKey("media")) {
-
                 String strFilePath = hashMap.get("media");
                 hashMap.remove("media");
-
-
                 File file = new File(strFilePath);
                 Log.d("file size", file.length() + "");
                 if (file != null && file.exists()) {
                     Log.d("Params >> ", "file_data = " + strFilePath);
                     multipartBody
-                            .addFormDataPart("media", file.getName(), RequestBody.create(MEDIA_TYPE_PNG, file));
-
+                            .addFormDataPart("profile_photo", file.getName(),
+                                    RequestBody.create(MEDIA_TYPE_PNG, file));
                 } else {
                     Log.d("file path error", "path not found: " + strFilePath);
                 }
-
             }
-
-
             String strUrl = hashMap.get("url");
             hashMap.remove("url");
-
             Log.d("STRURL >> ", strUrl);
-
             for (String key : hashMap.keySet()) {
                 Log.d("Params", key + " = " + hashMap.get(key));
                 multipartBody.addFormDataPart(key, hashMap.get(key));
             }
-
             builder.url(strUrl);
             builder.post(multipartBody.build());
             Request request = builder.build();
-
-
             Response response = configureHttpClient().newCall(request).execute();
-
             return response.body().string();
-
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
             return strInternet;
@@ -302,11 +279,11 @@ public class ParseController {
 
             String strUrl = map1.get("url");
             map1.remove("url");
-            Log.d("STRURL >> ", strUrl);
+            Log.e("STRURL >> ", strUrl);
 
 
             for (String key : map1.keySet()) {
-                Log.d("Params", key + " = " + map1.get(key));
+                Log.e("Params", key + " = " + map1.get(key));
 
                 multipartBody.addFormDataPart(key, map1.get(key));
             }
@@ -339,18 +316,13 @@ public class ParseController {
 
     public String callPUTAPI() {
         try {
-
-
             Request.Builder builder = new Request.Builder();
-
-            Log.d("Url in ParseController", strURL);
+            Log.e("Url in ParseController", strURL);
             FormBody.Builder formBody = new FormBody.Builder();
             for (String key : map.keySet()) {
-                Log.d("Params", key + " = " + map.get(key));
+                Log.e("Params", key + " = " + map.get(key));
                 formBody.add(key, map.get(key));
             }
-
-
             builder.url(strURL);
             builder.put(formBody.build());
             Request request = builder.build();
@@ -381,7 +353,7 @@ public class ParseController {
             Log.d("STRURL", strURL);
             HttpUrl.Builder httpBuider = HttpUrl.parse(strURL).newBuilder();
             for (String key : map.keySet()) {
-                Log.d("Params", key + " = " + map.get(key));
+                Log.e("Params", key + " = " + map.get(key));
                 httpBuider.addQueryParameter(key, map.get(key));
             }
             Request request = new Request.Builder().url(httpBuider.build()).build();
@@ -417,6 +389,7 @@ public class ParseController {
                 formBody.add(key, map.get(key));
             }
 
+
             builder.url(strURL);
             builder.delete(formBody.build());
             Request request = builder.build();
@@ -441,6 +414,7 @@ public class ParseController {
         }
         return null;
     }
+
 
     // checking response is null or empty if not null call onTaskCompleted
     // method

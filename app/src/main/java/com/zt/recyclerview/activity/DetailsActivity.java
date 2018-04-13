@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.MenuItem;
 import android.widget.TextView;
+
 import com.zt.recyclerview.R;
 import com.zt.recyclerview.global.Utils;
 
@@ -23,31 +24,35 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.details);
 
         //Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        setTitle("");
-        hashMap = (HashMap<String, String>) getIntent().getSerializableExtra("hashMap");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle.getSerializable("hashMap") != null) {
+            hashMap = (HashMap<String, String>) getIntent().getSerializableExtra("hashMap");
+        }
 
         initUI();
 
     }
 
     public void initUI() {
-        tv_titles = (TextView) findViewById(R.id.tv_titles);
-        tv_description = (TextView) findViewById(R.id.tv_description);
+        TextView tv_title = findViewById(R.id.tv_title);
+        tv_title.setText(getResources().getString(R.string.details));
+        tv_titles = findViewById(R.id.tv_titles);
+        tv_description = findViewById(R.id.tv_description);
 
         String title = hashMap.get("title");
         String description = hashMap.get("description");
         //Title
-        if (!Utils.isStringNull(title)) {
+        if (Utils.isNotEmptyString(title)) {
             String text = "<font color=#F47E02>Title: </font><font color=#000000>" + title + "</font>";
             tv_titles.setText(Html.fromHtml(text));
         }
         //Description
-        if (!Utils.isStringNull(description)) {
+        if (Utils.isNotEmptyString(description)) {
             String text = "<font color=#F47E02>Description: </font><font color=#000000>" + description + "</font>";
             tv_description.setText(Html.fromHtml(text));
         }

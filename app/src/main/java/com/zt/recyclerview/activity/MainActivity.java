@@ -3,6 +3,7 @@ package com.zt.recyclerview.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -11,8 +12,8 @@ import android.widget.TextView;
 
 import com.zt.recyclerview.R;
 import com.zt.recyclerview.adapter.EventAdapter;
+import com.zt.recyclerview.custom.RecyclerItemClickListener;
 import com.zt.recyclerview.global.GlobalConstant;
-import com.zt.recyclerview.global.RecyclerItemClickListener;
 import com.zt.recyclerview.global.Utils;
 import com.zt.recyclerview.restapicall.AsyncTaskCompleteListener;
 import com.zt.recyclerview.restapicall.ParseController;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("");
 
@@ -45,11 +46,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initUI() {
-        tv_event_not_found = (TextView) findViewById(R.id.tv_event_not_found);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
+        tv_event_not_found = findViewById(R.id.tv_event_not_found);
+        recyclerView = findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        //recyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -63,13 +65,11 @@ public class MainActivity extends AppCompatActivity {
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
-                                if (!Utils.isArrayListNull(eventList)) {
-                                    HashMap<String, String> hashMap = eventList.get(position);
-                                    if (hashMap != null && hashMap.size() != 0) {
-                                        Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
-                                        intent.putExtra("hashMap", hashMap);
-                                        startActivity(intent);
-                                    }
+                                if (Utils.isNotEmptyArrayList(eventList)) {
+                                    Intent intent = new Intent(MainActivity.this,
+                                            DetailsActivity.class);
+                                    intent.putExtra("hashMap", eventList.get(position));
+                                    startActivity(intent);
                                 }
                             }
                         })
@@ -132,12 +132,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void setData() {
-        if (!Utils.isArrayListNull(eventList)) {
-            tv_event_not_found.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-            //
+        if (Utils.isNotEmptyArrayList(eventList)) {
             EventAdapter adapter = new EventAdapter(this, eventList);
             recyclerView.setAdapter(adapter);
+            tv_event_not_found.setVisibility(View.GONE);
         } else {
             dataNotFound();
         }
@@ -145,6 +143,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void dataNotFound() {
         tv_event_not_found.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
+        recyclerView.setAdapter(null);
     }
 }

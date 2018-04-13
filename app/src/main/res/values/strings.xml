@@ -3,5 +3,6 @@
     <string name="recyclerview_example">RecyclerView Example</string>
     <string name="internet_error">Internet connection not available.</string>
     <string name="alert">Alert!</string>
+    <string name="details">Details</string>
     <string name="data_not_fount">Sorry data not found.</string>
 </resources>
